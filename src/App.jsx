@@ -1,48 +1,43 @@
 import React, { useState } from "react";
 import { create, all } from "mathjs";
+import { Button } from "flowbite-react";
 
 export const App = () => {
   const math = create(all);
 
-  const [solution, setSolution] = useState("");
+  const [solucion, setSolucion] = useState("");
 
-  const [inequalities, setInequalities] = useState([
-    "x1 + 2 * x2 <= 5",
-    "2 * x1 - 3 * x2 > 1",
-  ]);
+// Inicializa el estado para manejar múltiples inecuaciones como strings
+const [inecuaciones, setInecuaciones] = useState(["", "", "", ""]); // Ajusta según el máximo de inecuaciones que desees permitir
 
-  const handleInequalityChange = (e) => {
-    const newInequalities = [...inequalities];
-    newInequalities[0] = e.target.value; // Actualizamos solo la primera inecuación por ahora
-    setInequalities(newInequalities);
-  };
+  
 
-  const solveSystem = () => {
-    try {
-      // Convertir las inecuaciones a un formato compatible con Math.js
-      const equations = inequalities.map(inequality => inequality.replace(/x(\d+)/g, 'x[$1]'));
-      // Resolver el sistema de inecuaciones
-      const solutions = math.lusolve(equations);
-      // Mostrar las soluciones
-      console.log('Soluciones:', solutions);
-      setSolution(solutions);
-    } catch (error) {
-      console.error('Error al resolver el sistema de inecuaciones:', error);
-    }
+
+
+  const resolverInecuacion = (inecuacion) => {
+   
+   
   };
 
   return (
     <div className="container mx-auto mt-10">
-      <div className="flex gap-5 ">
-        <h2>Ingrese las inecuaciones lineales</h2>
+    <div className="flex flex-col gap-5 ">
+      <h2>Ingrese las inecuaciones lineales</h2>
+      {inecuaciones.map((inecuacion, index) => (
         <input
+          key={index}
           type="text"
-          value={inequalities.join(", ")} // Unimos las inecuaciones con una coma y un espacio
-          onChange={handleInequalityChange}
+          value={inecuacion}
+          onChange={(e) => {
+            const nuevasInecuaciones = [...inecuaciones];
+            nuevasInecuaciones[index] = e.target.value;
+            setInecuaciones(nuevasInecuaciones);
+          }}
         />
-        <button onClick={solveSystem}>Resolver</button>
-        <div>{solution && <p>Solución: {solution}</p>}</div>
-      </div>
+      ))}
+      <Button onClick={() => resolverInecuacion(inecuaciones)}>Resolver</Button>
+      <div>{solucion && <p>Solución: {solucion}</p>}</div>
     </div>
+  </div>
   );
 };
